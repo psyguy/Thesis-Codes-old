@@ -1,23 +1,23 @@
 tic; %To measure computation time
 % 
-%%  Simulation settings
+%% Simulation settings
 Npart=2; % Number of parts for fourier transform including intial part
-Tend=10*Npart;  % Total simulation time
-NTST=Tend*10000;    % Number of Time Steps
-Nout=5; % Output every 5th timestep
+Tend=10*Npart;%Totalsimulationtime
+NTST=Tend*10000;%NumberofTimeSteps
+Nout=5;%Outputevery5thtimestep
 
-deltat=Tend/NTST;   % Timestep size
+deltat=Tend/NTST;%Timestepsize
 
-%%  Parametersettings
-A=5;    % Average excitory synaptic gain
-B=25;   % Average slow inhibitory synaptic gain
-G=15;   % Average fast inhibitory synaptic gain
+%%Parametersettings
+A=5;%Averageexcitorysynapticgain
+B=25;%Averageslowinhibitorysynapticgain
+G=15;%Averagefastinhibitorysynapticgain
 
-a=100;  % Inverse of excitory time constant
-b=50;   % Inverse of slow inhibitory time constant
-g=500;  % Inverse of fast inhibitory time constant
+a=100;%Inverseofexcitorytimeconstant
+b=50;%Inverseofslowinhibitorytimeconstant
+g=500;%Inverseoffastinhibitorytimeconstant
 
-C=135;  % Connectivity parameter
+C=135;%Connectivityparameter
 C1=C;
 C2=0.8*C;
 C3=0.25*C;
@@ -26,14 +26,14 @@ C5=0.3*C;
 C6=0.1*C;
 C7=0.8*C;
 
-pf=90;  % Mean input
-sd=2;   % Standard deviation input
+pf=90;%Meaninput
+sd=2;%Standarddeviationinput
 
-%%  Initial condititons
+%%Initialcondititons
 x=zeros(4,1);
 y=zeros(4,1);
 
-%%  Initialise variables for computation
+%%Initialisevariablesforcomputation
 Im=eye(4,4);
 
 Q1=-deltat*diag([a^2,a^2,b^2,g^2]);
@@ -58,8 +58,8 @@ yn=zeros(4,1);
 
 %%
 t1=toc;
-disp(['Initialisation time:',num2str(t1)]);
-disp('Start simulation');
+disp(['Initialisationtime:',num2str(t1)]);
+disp('Startsimulation');
 
 tel=0;
 indexplot=2;
@@ -71,7 +71,7 @@ x=xn;
 y=yn;
 u=P*x;
 
-%   Saves u for output every Nout iterations
+%SavesuforoutputeveryNoutiterations
 tel=tel+1;
     if tel==Nout
         tel=0;
@@ -81,17 +81,17 @@ tel=tel+1;
 end
 
 t2=toc;
-disp(['Simulation complete, duration:',num2str(t2-t1)]);
+disp(['Simulationcomplete,duration:',num2str(t2-t1)]);
 
-%%  Post processing
+%%Postprocessing
 
-%Plot time series
+%Plottimeseries
 figure;
 plot(0:deltat*Nout:Tend,uout(1,:));
 xlim([0 Tend])
 set(gca,'YDir','reverse');
 
-%Calculate frequency spectrum
+%Calculatefrequencyspectrum
 for j=1:Npart-1;
     [f,pow]=freqplot(uout(1,floor(NTST*j/(Npart*Nout)):floor(NTST*(j+1)/(Npart*ut)))-mean(uout(1,floor(NTST*j/(Npart*Nout)):floor(NTST*(j+1)/(Npart*ut)))),1/(deltat*Nout));
     if j>1;
@@ -101,9 +101,9 @@ for j=1:Npart-1;
     end
 end
 
-%Display frequency spectrum
+%Displayfrequencyspectrum
 figure;
 plot(f,powtot/(Npart-1));
 xlim([050])
 
-toc; % Displays total computation time
+toc; %Displaystotalcomputationtime
