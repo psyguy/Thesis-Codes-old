@@ -27,8 +27,8 @@ C5=0.3*C;
 C6=0.1*C;
 C7=0.8*C;
 
-pf=50;%90;                  %Mean input
-sd=0;                  %Standard deviation input
+pf=90;%90;                  %Mean input
+sd=2;                  %Standard deviation input
 
 %% Initial condititons
 x=zeros(4,1);
