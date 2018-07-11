@@ -1,0 +1,42 @@
+# Project: Project2
+# Makefile created by Dev-C++ 4.9.9.2
+
+CPP  = g++.exe
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = 
+OBJ  = Basics.o Cells.o Network.o Simulator.o Synapses.o $(RES)
+LINKOBJ  = Basics.o Cells.o Network.o Simulator.o Synapses.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib"  
+INCS =  -I"C:/Dev-Cpp/include" 
+CXXINCS =  -I"C:/Dev-Cpp/lib/gcc/mingw32/3.4.2/include"  -I"C:/Dev-Cpp/include/c++/3.4.2/backward"  -I"C:/Dev-Cpp/include/c++/3.4.2/mingw32"  -I"C:/Dev-Cpp/include/c++/3.4.2"  -I"C:/Dev-Cpp/include" 
+BIN  = BJZ.exe
+CXXFLAGS = $(CXXINCS)  
+CFLAGS = $(INCS)  
+RM = rm -f
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before BJZ.exe all-after
+
+
+clean: clean-custom
+	${RM} $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CPP) $(LINKOBJ) -o "BJZ.exe" $(LIBS)
+
+Basics.o: Basics.cpp
+	$(CPP) -c Basics.cpp -o Basics.o $(CXXFLAGS)
+
+Cells.o: Cells.cpp
+	$(CPP) -c Cells.cpp -o Cells.o $(CXXFLAGS)
+
+Network.o: Network.cpp
+	$(CPP) -c Network.cpp -o Network.o $(CXXFLAGS)
+
+Simulator.o: Simulator.cpp
+	$(CPP) -c Simulator.cpp -o Simulator.o $(CXXFLAGS)
+
+Synapses.o: Synapses.cpp
+	$(CPP) -c Synapses.cpp -o Synapses.o $(CXXFLAGS)
