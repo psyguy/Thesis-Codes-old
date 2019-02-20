@@ -1,0 +1,14 @@
+logistic.Gong2004 <- function(x, connectivity.matrix, a = 1.7, eps = 0.8){
+  
+  y <- (1 - eps)*func.1(x) + eps/
+  
+  
+}
+
+func.1 <- function(x, a = 1.7){1 - a*x^2}
+
+    
+x_new = (1-eps)*(1-a*x_prev.^2) + (eps./M_i).*connectivity_mat*(1-a*x_prev.^2);
+
+
+
