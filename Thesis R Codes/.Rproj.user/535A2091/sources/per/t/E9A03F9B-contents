@@ -1,8 +1,9 @@
 library(dplyr)
 library("Hmisc")
 
-make.random.graph <- function(size = 20, num.links = 100){
+make.random.graph <- function(size = 20, num.links = 100, seed = 1){
   
+  set.seed(seed)
   vals <- sample.int(size ^ 2, num.links + size)
   diagonals <- c(1:size)#cbind(1:size,1:size)
   
