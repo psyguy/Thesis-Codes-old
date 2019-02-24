@@ -7,8 +7,8 @@ num.edges <- 5200
 num.nodes <- 300
 eps <- c(0.3, 0.4, 0.5)
 a <- 1.7
-t.transient <- 20
-
+t.transient <- 20 %>% as.vector()
+num.epochs <- 50000
 tol <- 0.001
 
 conn <- make.random.graph(size = num.nodes, num.links = num.edges,
@@ -16,34 +16,25 @@ conn <- make.random.graph(size = num.nodes, num.links = num.edges,
 
 
 x.init <- num.nodes %>% runif(-1,1)
-x.out <- x.init
+x.now <- x.init
 
-# This for loop keeps the history of the x's, which would be better if implemented separately.
-for (i in 1:t.transient) {
-  x.temp <- x.out %>% Hellrigel2019.logistic(conn)
-  x.out <- x.out %>% cbind(x.temp)
+x <- x.init
+connectivity.matrix <- conn
+clustering.coef <- NULL
+
+time.start <- Sys.time()
+
+for(iterations in 1:num.epochs){
+  
+  if(!(iterations %% 100)) paste("System time at iteration", iterations, "is", Sys.time()) %>% print()
+
+  rewired <- my.rewiring(inp.x = x, inp.conn = connectivity.matrix, eps = eps[1])
+  x <- rewired$x
+  connectivity.matrix <- rewired$connectivity.matrix  
+  clustering.coef[iterations] <- rewired$clustering.coef
 }
 
-
-# save(x.out, file = "x.out_5200.300.6000.Rdata")
-
-distances <- Hellrigel2019.syncerror(x.out,connectivity.matrix = conn)
-
-i_ <- sample.int(num.nodes,1)
-
-d_ <- distances[,i_]
-
-k_ <- which.min(d_)
-
-
-
-l_ <- (d_ * x.out[i_,]) %>% which.max()
-
-if(!conn[i_,j_1]) conn <- conn %>% swap.edge()
-
-# Skipped step 5 probabilistic approach
-
-conn <- conn %>% swap.edge()
-
-g <- graph_from_adjacency_matrix(conn, mode = "undirected")
+time.end <- Sys.time()
+time.taken <- time.end - time.start
+paste("It took", time.taken, "to run for", num.epochs, "epochs.") %>% print()
 
