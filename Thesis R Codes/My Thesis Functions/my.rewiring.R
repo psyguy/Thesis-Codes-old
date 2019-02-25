@@ -1,9 +1,10 @@
-my.rewiring <- function(inp.x, inp.conn, a = 1.7, eps = 0.8){
+my.rewiring <- function(inp.x, inp.conn, t.transient = 20, a = 1.7, eps = 0.8){
   
   x.temp <- inp.x
-  conn <- inp.conn
+  conn <- inp.conn <- conn
   
-  for (i in 1:t.transient) x.temp <- x.temp %>% Hellrigel2019.logistic(conn, a = a, eps = eps)
+  for (i in 1:t.transient) 
+    (x.temp <- x.temp %>% Hellrigel2019.logistic(conn, a = a, eps = eps))
   
   distances <- Hellrigel2019.syncerror(inp.x, connectivity.matrix = conn)
   
@@ -11,15 +12,16 @@ my.rewiring <- function(inp.x, inp.conn, a = 1.7, eps = 0.8){
   
   i_ <- sample.int(num.nodes,1)
   d_ <- distances[,i_]
-  k_ <- which.min(d_)
-  l_ <- (d_ * inp.x[i_]) %>% which.max()
+  k_val <- min(d_[-i_])
+  k_ <- which(d_==k_val)
+  l_ <- (d_ * conn[i_,]) %>% which.max()
   
-  if(!conn[i_,k_]) conn <- conn %>% swap.edge()
+  if(!conn[i_,k_]&T) conn <- conn %>% swap.edge(i_, k_, i_, l_)
 
   # Skipped step 5 probabilistic approach
   
   g <- igraph::graph_from_adjacency_matrix(conn, mode = "undirected")
-  clustering.coef <- transitivity(g)
+  clustering.coef <- transitivity(g, type = "local")
   
   output <- list(x = x.temp, connectivity.matrix = conn, clustering.coef = clustering.coef)
   
