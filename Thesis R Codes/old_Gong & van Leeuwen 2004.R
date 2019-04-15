@@ -1,28 +1,22 @@
 library(dplyr)
-rm(list=ls())
-source("./My Thesis Functions/April.GongvLeeuwen2004.R")
 
 seed <- 1
-# number of links
-L_c <- 50 #520
-# number of nodes
-N <- 32/2 #3000
-# number of iterations
-T_ <- 60 #600 
-# tol <- 0.001
+L_c <- 5200
+N <- 300
+T_ <- 6000 
+tol <- 0.001
 
 set.seed(seed)
 
 conn <- make.random.graph(size = N, num.links = L_c, seed = seed)
 
 x.init <- N %>% runif(-1,1)
-x.out <- x.init %>% as.matrix() %>% t()
+x.out <- x.init
 
-for (i in 1:T_) {
-  x.lastrow <- x.out %>% tail(1)  
-  x.temp <- x.lastrow %>% GongvLeeuwen2004.logistic(conn)
-  x.out <- x.temp %>% rbind(x.out)
-}
+# for (i in 1:T_) {
+#   x.temp <- x.out %>% GongvLeeuwen2004.logistic(conn)
+#   x.out <- x.out %>% cbind(x.temp)
+# }
 
 save(x.out, file = "x.out_5200.300.6000.Rdata")
 
