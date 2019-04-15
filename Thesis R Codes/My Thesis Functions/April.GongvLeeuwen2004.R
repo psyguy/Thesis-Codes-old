@@ -25,15 +25,21 @@ GongvLeeuwen2004.logistic <- function(x.input,
                                       a = 1.7,
                                       eps = 0.8){
   # eps: coupling strength
+  # eps <- 0.8
+  # x.input <- x.init
+  # connectivity.matrix <- conn
   
-  x.now <- x.input
+  x.now <- x.input <- x.init
   n.nodes <- x.now %>% ncol()
 
   
   M <- connectivity.matrix %*% rep(1,n.nodes) %>% t()
   fx <- x.now %>% func.1() %>% as.matrix()# %>% t()
   
-  x.next <- (1 - eps)*fx +  fx %*% connectivity.matrix*eps / M
+  neighbors <- fx %*% connectivity.matrix*eps / M
+  neighbors[is.nan(neighbors)] <- 0
+  
+  x.next <- (1 - eps)*fx + neighbors
   
   x.next %>% return()
   
@@ -65,7 +71,7 @@ swap.edge <- function(connectivity.matrix, from.1, to.1, from.2, to.2){
   
 }
 
-GongvLeeuwen2004.rewire <- function(x.input, conn){
+my.rewire <- function(x.input, conn){
   
   distances <- x.input %>% tail(1) %>% GongvLeeuwen2004.coherenceD()
   
@@ -75,8 +81,29 @@ GongvLeeuwen2004.rewire <- function(x.input, conn){
   j_1 <- which.min(d_)
   j_2 <- which.max(d_)
   
-  if(!conn[i_,j_1]) conn <- conn %>% swap.edge(from.1 = i_, to.1 = j_1,
+  # if(!conn[i_,j_1]) conn %>% return()
+  conn <- conn %>% swap.edge(from.1 = i_, to.1 = j_1,
                                                from.2 = i_, to.2 = j_2)
   conn %>% return()
   
   }
+
+GongvLeeuwen2004.adaptive.rewire <- function(input){
+  
+  x.start <- input$x.tot %>% tail(1) 
+  conn.start <- input$connectivity.matrix
+  
+  x.end <- x.start %>% GongvLeeuwen2004.logistic(conn.start)
+  conn.end <- my.rewire(x.end, conn.start)
+  
+  g <- igraph::graph_from_adjacency_matrix(conn.end, mode = "undirected")
+  ClCoef <- igraph::transitivity(g)
+  
+  output <- list(
+                x.tot = rbind(input$x.tot, x.end),
+                clustering.coefficient = c(input$clustering.coefficient, ClCoef),
+                connectivity.matrix = conn.end
+                )
+  class(output) <- append(class(output),"GongvLeeuwen2004")
+  output %>% return()
+}
