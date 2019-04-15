@@ -22,27 +22,13 @@ make.random.graph <- function(size = 5,
 
 GongvLeeuwen2004.logistic <- function(x.input,
                                       connectivity.matrix,
-                                      a = 1.7, eps = 0.8,
-                                      order = 0){
+                                      a = 1.7,
+                                      eps = 0.8){
   # eps: coupling strength
-  # x.input <- x.lastrow
-  #   t(x.out) %>% rbind(t(x.out))
-  # # connectivity.matrix <- conn
-  # 
   
-  x.now <- x.input # %>% t()
-  # if(dim(x.input)[1]=1) x.now <- x.input %>% tail(1)
-  # if(is.null(dim(x.input))) x.now <- x.input %>% t()# as.matrix() %>% t()
-  
+  x.now <- x.input
   n.nodes <- x.now %>% ncol()
-  
-  # x.now <- x.input %>% t()
-  
-  # Higher orders are not implemented yet
-  #if(order) x <- x.input[,len-order:len]
-  
-  # unit.vector allows to calculate M_i by multiplying it the connectivity matrix
-  # unit.vector <- matrix(1, height, 1)
+
   
   M <- connectivity.matrix %*% rep(1,n.nodes) %>% t()
   fx <- x.now %>% func.1() %>% as.matrix()# %>% t()
@@ -54,3 +40,43 @@ GongvLeeuwen2004.logistic <- function(x.input,
 }
 
 func.1 <- function(x, a = 1.7){1 - a*(x^2)}
+
+GongvLeeuwen2004.coherenceD <- function(x.input){
+  
+  x.duplicated <- rep(1,ncol(x.input)) %*% x.input
+  d <- (t(x.duplicated) - x.duplicated) %>% abs()
+  diag(d) <- NA
+  d %>% return()
+  
+}
+
+swap.edge <- function(connectivity.matrix, from.1, to.1, from.2, to.2){
+  
+  edge.1 <- connectivity.matrix[from.1,to.1]
+  edge.2 <- connectivity.matrix[from.2,to.2]
+  
+  connectivity.matrix[from.1,to.1] <- edge.2
+  connectivity.matrix[to.1,from.1] <- edge.2
+  
+  connectivity.matrix[from.2,to.2] <- edge.1
+  connectivity.matrix[to.2,from.2] <- edge.1
+  
+  connectivity.matrix %>% return()
+  
+}
+
+GongvLeeuwen2004.rewire <- function(x.input, conn){
+  
+  distances <- x.input %>% tail(1) %>% GongvLeeuwen2004.coherenceD()
+  
+  i_ <- sample.int(N,1)
+  d_ <- distances[,i_]
+  
+  j_1 <- which.min(d_)
+  j_2 <- which.max(d_)
+  
+  if(!conn[i_,j_1]) conn <- conn %>% swap.edge(from.1 = i_, to.1 = j_1,
+                                               from.2 = i_, to.2 = j_2)
+  conn %>% return()
+  
+  }
