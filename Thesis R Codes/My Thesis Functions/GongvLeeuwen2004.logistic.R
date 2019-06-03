@@ -1,6 +1,9 @@
 library(dplyr)
 
-GongvLeeuwen2004.logistic <- function(x.input, connectivity.matrix, a = 1.7, eps = 0.8, order = 0){
+GongvLeeuwen2004.logistic <- function(x.input,
+                                      connectivity.matrix,
+                                      a = 1.7, eps = 0.8,
+                                      order = 0){
   
   # eps: coupling strength
   inp.dim <- x.input %>% dim()
