@@ -8,7 +8,9 @@
 list.of.packages <- c("tidyverse",
                       "dplyr",
                       "plyr",
+                      "corrplot",
                       "Hmisc",
+                      "seriation",
                       "igraph")
 new.packages <-
   list.of.packages[!(list.of.packages %in% installed.packages()[, "Package"])]
@@ -97,7 +99,7 @@ swap_edges <- function(connectivity.matrix,
 my_rewire <- function(x.input, conn) {
   distances <- x.input %>% tail(1) %>% GongvLeeuwen2004_coherenceD()
   
-  i_ <- sample.int(N, 1)
+  i_ <- sample.int(ncol(conn), 1)
   d_ <- distances[, i_]
   
   j_1 <- which.min(d_)

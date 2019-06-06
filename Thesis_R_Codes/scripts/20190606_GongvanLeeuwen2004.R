@@ -1,15 +1,33 @@
-library(dplyr)
+# Notes -------------------------------------------------------------------
+
+# 
+# It turns out that the #edges << N^2. And thats the reason why the 
+# nothing changed over time. Will correct in the next version. 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+
+
+# init --------------------------------------------------------------------
+
 rm(list = ls())
 source("./functions/functions_GongvLeeuwen2004.R")
-
 seed <- 1
 # number of links
 L_c <- 520
 # number of nodes
-N <- 3000 #3000
+N <- 40#3000 #3000
 # number of iterations
 T_ <- 600 #600
 # tol <- 0.001
+
+
+# start of the script -----------------------------------------------------
 
 set.seed(seed)
 
@@ -39,6 +57,12 @@ for (i in 1:10) {
   (ClCoef <- igraph::transitivity(g)) %>% print()
 }
 
-GvL.finished$x.tot[, 6]
+GvL.finished$x.tot[, ]
 
 (GvL.finished$x.tot[2, ] - GvL.finished$x.tot[3, ]) %>% sum()
+
+
+# for(k in c(1:11)){
+
+densityplot(GvL.finished$x.tot[1,])
+
