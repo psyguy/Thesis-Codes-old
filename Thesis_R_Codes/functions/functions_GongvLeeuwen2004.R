@@ -57,8 +57,8 @@ GongvLeeuwen2004_adaptive_rewire <- function(input) {
   x.start <- input$x.tot %>% tail(1)
   conn.start <- input$connectivity.matrix
   
-  x.end <- x.start %>% GongvLeeuwen2004.logistic(conn.start)
-  conn.end <- my.rewire(x.end, conn.start)
+  x.end <- x.start %>% GongvLeeuwen2004_logistic(conn.start)
+  conn.end <- my_rewire(x.end, conn.start)
   
   g <-
     igraph::graph_from_adjacency_matrix(conn.end, mode = "undirected")
