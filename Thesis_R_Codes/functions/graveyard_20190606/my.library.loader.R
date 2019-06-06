@@ -1,4 +1,5 @@
-list.of.packages <- c("tidyverse", "dplyr", "plyr", "Hmisc", "igraph")
+list.of.packages <- c("tidyverse", "dplyr", "plyr",
+                      "Hmisc", "igraph")
 function.path <- "./functions/"
 library(plyr)
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
