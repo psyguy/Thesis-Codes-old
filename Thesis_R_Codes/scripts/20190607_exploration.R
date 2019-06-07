@@ -1,3 +1,44 @@
+m <- make_random_graph(size = num_nodes,
+                              num.links = num_edges,
+                              seed = seed)
+a <- num_nodes %>% runif(-1, 1) %>% t()
+
+c <-  m %>% my_clustceof()
+
+l <- list(activities = a,
+          mat.connectivity = list(m),
+          coef.clustering = c)
+
+p <- list(num_nodes = num_nodes,
+          num_edges = num_edges)
+
+toy_brain <- new("brain",
+                 birthday = as.character(Sys.time()),
+                 age = list(beat = 1, minute = 1),
+                 starting_values = l,
+                 parameters = p,
+                 history = l,
+                 now = l
+                 )
+
+toy_brain_1 <- toy_brain %>% update()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# graveyard ---------------------------------------------------------------
+
+
 a <- matrix(
   c(
     0,1,0,0,0,0,0,
@@ -47,3 +88,7 @@ conn %>% my_clustceof()
 conn %>% pimage()
 o <- conn %>% seriate()
 pimage(conn,o)
+
+
+
+student(name="John", age=21, GPA=3.5)

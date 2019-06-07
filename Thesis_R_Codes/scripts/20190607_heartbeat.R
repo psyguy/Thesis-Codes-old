@@ -33,48 +33,42 @@ num_minutes <- 500
 
 set.seed(seed)
 
-# making a random matrix
-mat_adj <- make_random_graph(size = num_nodes,
-                          num.links = num_edges,
-                          seed = seed)
+m <- make_random_graph(size = num_nodes,
+                       num.links = num_edges,
+                       seed = seed)
+a <- num_nodes %>% runif(-1, 1) %>% t()
 
-# making initial values of the node activations
-activities_init <- num_nodes %>% runif(-1, 1) %>% t()
+c <-  m %>% my_clustceof()
 
-# Cl
-c <-  mat_adj %>% my_clustceof()
+l <- list(activities = a,
+          mat.connectivity = list(m),
+          coef.clustering = c)
 
+p <- list(num_nodes = num_nodes,
+          num_edges = num_edges)
 
-GvL.start <- list(
-  x.tot = x.init,
-  clustering.coefficient = ClCoef,
-  connectivity.matrix = conn
+toy_brain <- new("brain",
+                 birthday = as.character(Sys.time()),
+                 age = list(beat = 1, minute = 1),
+                 starting_values = l,
+                 parameters = p,
+                 history = l,
+                 now = l
 )
 
-GvL.finished <- GvL.start
+
+aging_brain <- toy_brain
+
 
 time_start <- Sys.time()
-# T_ <- 4000 #since more is redundant
-for (i in 1:T_) {
-  print(i)
-  GvL.finished <- GvL.finished %>%
-    GongvLeeuwen2004_adaptive_rewire()
-  g <- GvL.finished$connectivity.matrix %>%
-    igraph::graph_from_adjacency_matrix(mode = "undirected")
-  (ClCoef <- igraph::transitivity(g)) %>% print()
-  if (!(i %% (T_ / 40))) {
-    title <- paste0("t = ", i, ", Clustering Coefficient = ", ClCoef)
-    d <- GvL.finished$connectivity.matrix
-    o <- seriate(d)
-    pimage(d, o, main = title)
-    # GvL.finished$connectivity.matrix %>% corrplot(method = "square")
-  }
-  
+
+for(i in 1:100) {
+  aging_brain <- aging_brain %>% update()
+  if (!(i %% 10))
+    aging_brain <- aging_brain %>% rewire()
 }
 
-
 time_taken <- Sys.time - time_start
-GvL.finished$clustering.coefficient %>% plot()
 
 save_vars(ls())
 
