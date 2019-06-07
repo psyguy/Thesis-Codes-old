@@ -115,3 +115,20 @@ my_rewire <- function(x.input, conn) {
   conn %>% return()
   
 }
+
+
+# clustering coeeficient (transitivity) -----------------------------------
+
+my_clustceof <- function(m) {
+  tr <- function(m)
+    sum(diag(m), na.rm = TRUE)
+  
+  m <- m %>% as.matrix()
+  if (dim(m)[1] != dim(m)[2])
+    stop("m must be a square matrix")
+  
+  m2 <- m %*% m
+  m3 <- m2 %*% m
+  
+  tr(m3) / (sum(m2) - tr(m2))
+}

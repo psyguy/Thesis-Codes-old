@@ -19,11 +19,11 @@ rm(list = ls())
 source("./functions/functions_GongvLeeuwen2004.R")
 seed <- 1
 # number of nodes
-num_nodes <- 100
+num_nodes <- 600
 # number of links
-num_edges <- round(2 * log(num_nodes) * (num_nodes - 1)) * 2
+num_edges <- 3*round(2 * log(num_nodes) * (num_nodes - 1))
 # number of iterations
-T_ <- 15000 #600
+T_ <- 20000 #600
 # tol <- 0.001
 
 
@@ -48,7 +48,8 @@ GvL.start <- list(
 
 GvL.finished <- GvL.start
 
-T_ <- 4000 #since more is redundant
+time_start <- Sys.time()
+# T_ <- 4000 #since more is redundant
 for (i in 1:T_) {
   print(i)
   GvL.finished <- GvL.finished %>%
@@ -56,20 +57,22 @@ for (i in 1:T_) {
   g <- GvL.finished$connectivity.matrix %>%
     igraph::graph_from_adjacency_matrix(mode = "undirected")
   (ClCoef <- igraph::transitivity(g)) %>% print()
-  if (!(i %% (T_ / 10))) {
+  if (!(i %% (T_ / 40))) {
     title <- paste0("t = ", i, ", Clustering Coefficient = ", ClCoef)
     d <- GvL.finished$connectivity.matrix
     o <- seriate(d)
-    pimage(d, main = paste("Random", title))
-    pimage(d, o, main = paste("Reordered", title))
+    pimage(d, o, main = title)
     # GvL.finished$connectivity.matrix %>% corrplot(method = "square")
   }
   
 }
 
+
+time_taken <- Sys.time - time_start
+GvL.finished$clustering.coefficient %>% plot()
+
 save_vars(ls())
 
-GvL.finished$clustering.coefficient %>% plot()
 # GvL.finished$connectivity.matrix %>% corrplot(method = "square")
 
 # GvL.finished$x.tot[, ]
