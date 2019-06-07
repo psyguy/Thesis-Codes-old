@@ -19,9 +19,9 @@ rm(list = ls())
 source("./functions/functions_GongvLeeuwen2004.R")
 seed <- 1
 # number of nodes
-num_nodes <- 600
+num_nodes <- 30
 # number of links
-num_edges <- 3*round(2 * log(num_nodes) * (num_nodes - 1))
+num_edges <- round(2 * log(num_nodes) * (num_nodes - 1))
 # number of iterations
 T_ <- 20000 #600
 # tol <- 0.001
