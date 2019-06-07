@@ -58,7 +58,7 @@ make_random_graph <- function(size = 5,
                               num.links = 10,
                               distribution = "binary",
                               parameters = c(0, 1),
-                              seed = 1) {
+                              seed = rnorm(1)) {
   set.seed(seed)
   edges <- rep(0, size * (size - 1) / 2)
   
